@@ -330,7 +330,8 @@ tpl = sub1(
     const A = this._analysis;
     if (!A) { alert('أكمل التحليل أولاً ثم اطبع التقرير.'); return; }
     const e = t => this.esc(t);
-    const logo = await this.toDataUrl('/brand/logo.png').catch(() => '');
+    const logo = await this.toDataUrl('/brand/mirat-icon.png').catch(() => '');
+    const conf = await this.toDataUrl('/brand/taif26.webp').catch(() => '');
     const before = this._photoUrl ? await this.toDataUrl(this._photoUrl).catch(() => this._photoUrl) : '';
     const names = [['composition', 'التكوين المعماري'], ['colors', 'الألوان'], ['materials', 'المواد والخامات'], ['openings', 'الفتحات'], ['shading', 'التظليل']];
     const recs = (A.recommendations || []).filter(r => r.where);
@@ -342,21 +343,21 @@ tpl = sub1(
     const doc = '<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>تقرير مرآة عمارة الطائف</title><style>'
       + '@page{size:A4;margin:9mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}'
       + 'body{margin:0;font-family:Tahoma,Arial,sans-serif;color:#2b1a24;font-size:11.5px;line-height:1.6}'
-      + '#page{width:100%}.head{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(160deg,#7E3B5C,#5A2A44);border-radius:12px;padding:8px 16px;color:#fff}'
-      + '.head img{height:34px}.head b{font-size:16px}.head span{font-size:11px;opacity:.85}'
+      + '#page{width:100%}.head{display:flex;align-items:center;justify-content:space-between;background:#1A0851;border-radius:12px;padding:7px 14px;color:#fff;gap:12px}'
+      + '.head .m{height:38px;width:38px;border-radius:9px;background:#000}.head .c{height:34px}.head .t{flex:1;text-align:right;margin-right:4px}.head b{font-size:16px}.head span{font-size:11px;opacity:.85}'
       + '.imgs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.imgs figure{margin:0;position:relative;height:178px;border-radius:10px;overflow:hidden;background:#eee}'
       + '.imgs img{width:100%;height:100%;object-fit:cover;display:block}.tag{position:absolute;top:7px;right:7px;background:rgba(90,42,68,.85);color:#fff;border-radius:99px;padding:2px 11px;font-size:11px;font-weight:700}'
-      + '.tag.a{background:#BE4A73}.grid{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;border:1px solid #ead7e0;border-radius:12px;padding:8px 12px}'
+      + '.tag.a{background:#6A2FB5}.grid{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;border:1px solid #ddd6ef;border-radius:12px;padding:8px 12px}'
       + '.ring{width:104px;height:104px;border-radius:50%;display:grid;place-items:center;margin:auto}.ring div{width:80px;height:80px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center}'
-      + '.ring b{font-size:27px;line-height:1;color:#5A2A44}.ring small{font-size:9.5px;color:#777}.cap{text-align:center;font-size:10.5px;font-weight:700;margin-top:2px}'
+      + '.ring b{font-size:27px;line-height:1;color:#1A0851}.ring small{font-size:9.5px;color:#777}.cap{text-align:center;font-size:10.5px;font-weight:700;margin-top:2px}'
       + '.row{display:grid;grid-template-columns:96px 1fr 26px;gap:7px;align-items:center;margin:2.5px 0}.row span{font-weight:700}.bar{height:7px;background:#eee;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px}'
       + '.note{grid-column:1/4;font-size:10px;color:#777;margin-top:-2px}'
-      + 'h2{font-size:12.5px;margin:9px 0 4px;color:#7E2B52;border-right:4px solid #BE4A73;padding-right:7px}'
-      + '.sum{background:#faf3f6;border-radius:10px;padding:6px 11px}.sum b{display:block;margin-bottom:2px}'
-      + '.rec{display:grid;grid-template-columns:96px 1fr;gap:7px;padding:3px 0;border-bottom:1px dashed #ead7e0}.rec:last-child{border:0}.rec b{color:#7E2B52}.rec i{display:block;font-style:normal;color:#777;font-size:10px}'
+      + 'h2{font-size:12.5px;margin:9px 0 4px;color:#3B1D8A;border-right:4px solid #6A2FB5;padding-right:7px}'
+      + '.sum{background:#f3f0fa;border-radius:10px;padding:6px 11px}.sum b{display:block;margin-bottom:2px}'
+      + '.rec{display:grid;grid-template-columns:96px 1fr;gap:7px;padding:3px 0;border-bottom:1px dashed #ddd6ef}.rec:last-child{border:0}.rec b{color:#3B1D8A}.rec i{display:block;font-style:normal;color:#777;font-size:10px}'
       + '.qa{font-size:10.5px;background:#f6f6f6;border-radius:8px;padding:4px 9px;margin-top:3px}.foot{margin-top:7px;font-size:9px;color:#888;text-align:center}'
       + '</style></head><body><div id="page">'
-      + '<div class="head"><img src="' + logo + '"><div style="text-align:left"><b>تقرير تحليل الواجهة · عمارة الطائف</b><br><span>' + new Date().toLocaleDateString('ar-SA') + '</span></div></div>'
+      + '<div class="head"><img class="m" src="' + logo + '"><div class="t"><b>مرآة عمارة الطائف · تقرير تحليل الواجهة</b><br><span>' + new Date().toLocaleDateString('ar-SA') + '</span></div><img class="c" src="' + conf + '"></div>'
       + '<div class="imgs"><figure><img src="' + before + '"><span class="tag">قبل</span></figure>'
       + (this._afterUrl ? '<figure><img src="' + this._afterUrl + '"><span class="tag a">بعد · التصور المقترح</span></figure>' : '<figure style="display:grid;place-items:center;color:#999">لم يُولَّد التصور بعد</figure>') + '</div>'
       + '<div class="grid"><div><div class="ring" style="background:conic-gradient(' + col(A.matchScore) + ' ' + Math.round(A.matchScore * 3.6) + 'deg,#eee 0)"><div><b>' + A.matchScore + '</b><small>من 100</small></div></div><div class="cap">التوافق مع طراز الطائف</div></div><div>'
