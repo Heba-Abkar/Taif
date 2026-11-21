@@ -46,7 +46,7 @@ export async function editImage(buffer, mime, prompt) {
   fd.append("prompt", prompt);
   fd.append("size", "auto");
   fd.append("n", "1");
-  fd.append("image", new Blob([buffer], { type: mime }), mime === "image/png" ? "photo.png" : "photo.jpg");
+  fd.append("image", new Blob([buffer], { type: mime }), `photo.${mime === "image/png" ? "png" : mime === "image/webp" ? "webp" : "jpg"}`);
   const res = await fetch(`${BASE}/images/edits`, {
     method: "POST",
     headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
