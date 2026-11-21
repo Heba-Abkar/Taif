@@ -19,9 +19,10 @@ async function call(body) {
   return res;
 }
 
-export async function complete({ system, messages, maxTokens = 1200, json = false }) {
+export async function complete({ system, messages, maxTokens = 1200, json = false, deterministic = false }) {
   const res = await call({
     max_completion_tokens: maxTokens,
+    ...(deterministic ? { temperature: 0, seed: 20260101 } : {}),
     ...(json ? { response_format: { type: "json_object" } } : {}),
     messages: [...(system ? [{ role: "system", content: system }] : []), ...messages],
   });

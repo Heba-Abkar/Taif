@@ -32,8 +32,8 @@ tpl = rsub1(
     r'<div style="display:\{\{ qrDisplay \}\};.*?\n              </div>(?=\n            </div>\n            <!-- gallery card -->)',
     '<div style="display:{{ qrDisplay }}; width:100%;">'
     '<div sc-camel-on-click="{{ simulatePhone }}" style-hover="background:rgba(255,255,255,0.3);" '
-    'style="position:relative; width:100%; height:230px; border-radius:20px; overflow:hidden; cursor:pointer; background:rgba(74,36,54,0.35); border:2px dashed rgba(255,255,255,0.7); display:grid; place-items:center; transition:all 0.2s;">'
-    '<img src="{{ photoPreview }}" alt="" style="display:{{ previewDisplay }}; position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">'
+    'style="position:relative; width:100%; height:280px; border-radius:20px; overflow:hidden; cursor:pointer; background:rgba(74,36,54,0.35); border:2px dashed rgba(255,255,255,0.7); display:grid; place-items:center; transition:all 0.2s;">'
+    '<img src="{{ photoPreview }}" alt="" style="display:{{ previewDisplay }}; position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">'
     '<div style="display:{{ hintDisplay }}; flex-direction:column; align-items:center; gap:8px; text-align:center; padding:16px;">'
     '<span style="font-size:34px; line-height:1;">＋</span><span style="font-size:15px; font-weight:800;">اضغط لاختيار صورة الواجهة</span>'
     '<span style="font-size:12.5px; font-weight:600; color:rgba(255,255,255,0.85);">صورة واضحة للواجهة الأمامية</span></div>'
@@ -70,7 +70,7 @@ tpl = rsub1(
     '<sc-for list="{{ detChips }}" as="d" hint-placeholder-count="5">'
     '<span style="font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:999px; background:{{ d.bg }}; border:1px solid {{ d.bd }}; color:{{ d.color }};">{{ d.text }}</span>'
     '</sc-for></div>'
-    '<div style="display:{{ doneDisplay }}; flex-direction:column; gap:12px; margin-top:10px; padding:18px 20px; border-radius:20px; background:linear-gradient(160deg,rgba(124,242,156,0.30),rgba(255,255,255,0.22)); border:1.5px solid #FFFFFF; animation:fadeUp 0.5s ease-out both;">'
+    '<div style="display:{{ doneDisplay }}; flex-direction:column; gap:12px; margin-top:10px; padding:18px 20px; border-radius:20px; background:linear-gradient(160deg,rgba(255,183,212,0.34),rgba(255,255,255,0.22)); border:1.5px solid #FFFFFF; animation:fadeUp 0.5s ease-out both;">'
     '<span style="font-size:20px; font-weight:800;">✓ اكتمل التحليل</span>'
     '<span style="font-size:14.5px; font-weight:600; line-height:1.9;">{{ verdict }}</span>'
     '<div sc-camel-on-click="{{ next }}" style-hover="transform:translateY(-2px);" '
@@ -196,7 +196,7 @@ tpl = sub1(
 )
 tpl = sub1(
     "    messages: [\n      { who: 'ai', text: 'أهلًا! انتهينا من تصور واجهتك. اسألني عن أي تغيير — لماذا اقترحناه وما فائدته.' }\n    ]",
-    "    messages: [\n      { who: 'ai', text: 'أهلًا، أنا مِرْوَة. ارفع صورة واجهة منزلك وأكمل التحليل، وبعدها أشرح لك لماذا صُمّم التصور بهذه الطريقة.' }\n    ],\n    hasPhoto: false, photoPreview: '', gallery: [], gallerySel: -1, analysis: null, analysisState: 'idle', stageDone: 0, afterState: 'idle', errMsg: ''",
+    "    messages: [\n      { who: 'ai', text: 'أهلًا، أنا مِرْوَة. ارفع صورة واجهة منزلك وأكمل التحليل، وبعدها أشرح لك لماذا صُمّم التصور بهذه الطريقة.' }\n    ],\n    hasPhoto: false, photoPreview: '', afterSrc: '', gallery: [], gallerySel: -1, analysis: null, analysisState: 'idle', stageDone: 0, afterState: 'idle', errMsg: ''",
     tpl,
 )
 
@@ -249,7 +249,7 @@ tpl = sub1(
   newPhoto(blob, previewUrl, extra) {
     this._file = blob; this._analyzed = null; this._analysis = null; this._afterUrl = null; this._ctx = ''; this._photoUrl = previewUrl;
     this.setState(Object.assign({
-      hasPhoto: true, photoPreview: previewUrl, analysis: null, analysisState: 'idle', stageDone: 0, afterState: 'idle', errMsg: '', score: 0,
+      hasPhoto: true, photoPreview: previewUrl, analysis: null, analysisState: 'idle', stageDone: 0, afterState: 'idle', afterSrc: '', errMsg: '', score: 0,
       messages: [{ who: 'ai', text: 'وصلت الصورة. تابع لنبدأ التحليل.' }]
     }, extra || {}));
   }
@@ -312,10 +312,7 @@ tpl = sub1(
       const url = g.b64 ? 'data:' + (g.mime || 'image/png') + ';base64,' + g.b64 : g.url;
       if (!url) throw new Error('لم تصل صورة');
       this._afterUrl = url;
-      ['after-img', 'chat-facade', 'before-img', 'analysis-facade'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('src', id === 'after-img' || id === 'chat-facade' ? url : this._photoUrl);
-      });
+      this.setState({ afterSrc: url });
       this.setState({ afterState: 'done' });
     } catch (e) {
       this.setState({ afterState: 'error', errMsg: String(e.message || e) });
@@ -330,37 +327,37 @@ tpl = sub1(
     const A = this._analysis;
     if (!A) { alert('أكمل التحليل أولاً ثم اطبع التقرير.'); return; }
     const e = t => this.esc(t);
+    const O = location.origin;
     const logo = await this.toDataUrl('/brand/mirat-icon.png').catch(() => '');
-    const conf = await this.toDataUrl('/brand/taif26.webp').catch(() => '');
-    const before = this._photoUrl ? await this.toDataUrl(this._photoUrl).catch(() => this._photoUrl) : '';
+        const before = this._photoUrl ? await this.toDataUrl(this._photoUrl).catch(() => this._photoUrl) : '';
     const names = [['composition', 'التكوين المعماري'], ['colors', 'الألوان'], ['materials', 'المواد والخامات'], ['openings', 'الفتحات'], ['shading', 'التظليل']];
     const recs = (A.recommendations || []).filter(r => r.where);
     const qa = [];
     const ms = this.state.messages.slice(1);
     for (let i = 0; i < ms.length - 1; i++) if (ms[i].who === 'me' && ms[i + 1].who === 'ai') qa.push([ms[i].text, ms[i + 1].text]);
     const cut = (t, n) => { t = String(t || '').replace(/\\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1) + '…' : t; };
-    const col = s => s >= 75 ? '#2e9b5f' : s >= 55 ? '#d99a1e' : '#c0504d';
+    const col = s => s >= 75 ? '#7E4BA8' : s >= 55 ? '#B26984' : '#E4759D';
     const doc = '<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>تقرير مرآة عمارة الطائف</title><style>'
-      + '@page{size:A4;margin:9mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}'
-      + 'body{margin:0;font-family:Tahoma,Arial,sans-serif;color:#2b1a24;font-size:11.5px;line-height:1.6}'
-      + '#page{width:100%}.head{display:flex;align-items:center;justify-content:space-between;background:#1A0851;border-radius:12px;padding:7px 14px;color:#fff;gap:12px}'
+      + '@font-face{font-family:Cairo;font-weight:400;src:url(' + O + '/fonts/cairo-400.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}@font-face{font-family:Cairo;font-weight:600;src:url(' + O + '/fonts/cairo-600.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}@font-face{font-family:Cairo;font-weight:700;src:url(' + O + '/fonts/cairo-700.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}@font-face{font-family:Cairo;font-weight:800;src:url(' + O + '/fonts/cairo-800.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}@font-face{font-family:Cairo;font-weight:400;src:url(' + O + '/fonts/cairo-latin-400.woff2);unicode-range:U+0000-05FF,U+2000-206F}@font-face{font-family:Cairo;font-weight:600 800;src:url(' + O + '/fonts/cairo-latin-700.woff2);unicode-range:U+0000-05FF,U+2000-206F}@page{size:A4;margin:9mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}'
+      + 'body{margin:0;font-family:Cairo,Tahoma,sans-serif;color:#2b1a24;font-size:12px;line-height:1.65}'
+      + '#page{width:100%}.head{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(160deg,#B26984,#6B3550);border-radius:12px;padding:9px 16px;color:#fff;gap:12px}'
       + '.head .m{height:38px;width:38px;border-radius:9px;background:#000}.head .c{height:34px}.head .t{flex:1;text-align:right;margin-right:4px}.head b{font-size:16px}.head span{font-size:11px;opacity:.85}'
-      + '.imgs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.imgs figure{margin:0;position:relative;height:178px;border-radius:10px;overflow:hidden;background:#eee}'
-      + '.imgs img{width:100%;height:100%;object-fit:cover;display:block}.tag{position:absolute;top:7px;right:7px;background:rgba(90,42,68,.85);color:#fff;border-radius:99px;padding:2px 11px;font-size:11px;font-weight:700}'
-      + '.tag.a{background:#6A2FB5}.grid{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;border:1px solid #ddd6ef;border-radius:12px;padding:8px 12px}'
+      + '.imgs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.imgs figure{margin:0;position:relative;height:200px;border-radius:10px;overflow:hidden;background:#f1e6ec}'
+      + '.imgs img{width:100%;height:100%;object-fit:contain;display:block}.tag{position:absolute;top:7px;right:7px;background:rgba(90,42,68,.85);color:#fff;border-radius:99px;padding:2px 11px;font-size:11px;font-weight:700}'
+      + '.tag.a{background:#BE4A73}.grid{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;border:1px solid #ecd3df;border-radius:12px;padding:8px 12px}'
       + '.ring{width:104px;height:104px;border-radius:50%;display:grid;place-items:center;margin:auto}.ring div{width:80px;height:80px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center}'
-      + '.ring b{font-size:27px;line-height:1;color:#1A0851}.ring small{font-size:9.5px;color:#777}.cap{text-align:center;font-size:10.5px;font-weight:700;margin-top:2px}'
+      + '.ring b{font-size:27px;line-height:1;color:#6B3550}.ring small{font-size:9.5px;color:#777}.cap{text-align:center;font-size:10.5px;font-weight:700;margin-top:2px}'
       + '.row{display:grid;grid-template-columns:96px 1fr 26px;gap:7px;align-items:center;margin:2.5px 0}.row span{font-weight:700}.bar{height:7px;background:#eee;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px}'
       + '.note{grid-column:1/4;font-size:10px;color:#777;margin-top:-2px}'
-      + 'h2{font-size:12.5px;margin:9px 0 4px;color:#3B1D8A;border-right:4px solid #6A2FB5;padding-right:7px}'
-      + '.sum{background:#f3f0fa;border-radius:10px;padding:6px 11px}.sum b{display:block;margin-bottom:2px}'
-      + '.rec{display:grid;grid-template-columns:96px 1fr;gap:7px;padding:3px 0;border-bottom:1px dashed #ddd6ef}.rec:last-child{border:0}.rec b{color:#3B1D8A}.rec i{display:block;font-style:normal;color:#777;font-size:10px}'
+      + 'h2{font-size:12.5px;margin:9px 0 4px;color:#7E2B52;border-right:4px solid #BE4A73;padding-right:7px}'
+      + '.sum{background:#faf1f5;border-radius:10px;padding:6px 11px}.sum b{display:block;margin-bottom:2px}'
+      + '.rec{display:grid;grid-template-columns:96px 1fr;gap:7px;padding:3px 0;border-bottom:1px dashed #ecd3df}.rec:last-child{border:0}.rec b{color:#7E2B52}.rec i{display:block;font-style:normal;color:#777;font-size:10px}'
       + '.qa{font-size:10.5px;background:#f6f6f6;border-radius:8px;padding:4px 9px;margin-top:3px}.foot{margin-top:7px;font-size:9px;color:#888;text-align:center}'
       + '</style></head><body><div id="page">'
-      + '<div class="head"><img class="m" src="' + logo + '"><div class="t"><b>مرآة عمارة الطائف · تقرير تحليل الواجهة</b><br><span>' + new Date().toLocaleDateString('ar-SA') + '</span></div><img class="c" src="' + conf + '"></div>'
+      + '<div class="head"><img class="m" src="' + logo + '"><div class="t"><b>تقرير مرآة عمارة الطائف</b><br><span>تحليل الواجهة · ' + new Date().toLocaleDateString('ar-SA') + '</span></div></div>'
       + '<div class="imgs"><figure><img src="' + before + '"><span class="tag">قبل</span></figure>'
       + (this._afterUrl ? '<figure><img src="' + this._afterUrl + '"><span class="tag a">بعد · التصور المقترح</span></figure>' : '<figure style="display:grid;place-items:center;color:#999">لم يُولَّد التصور بعد</figure>') + '</div>'
-      + '<div class="grid"><div><div class="ring" style="background:conic-gradient(' + col(A.matchScore) + ' ' + Math.round(A.matchScore * 3.6) + 'deg,#eee 0)"><div><b>' + A.matchScore + '</b><small>من 100</small></div></div><div class="cap">التوافق مع طراز الطائف</div></div><div>'
+      + '<div class="grid"><div><div class="ring" style="background:conic-gradient(#E4759D 0deg,#7E4BA8 ' + Math.round(A.matchScore * 3.6) + 'deg,#eee 0)"><div><b>' + A.matchScore + '</b><small>من 100</small></div></div><div class="cap">التوافق مع طراز الطائف</div></div><div>'
       + names.map(n => { const v = A.scores[n[0]] || 0; return '<div class="row"><span>' + n[1] + '</span><div class="bar"><i style="width:' + v + '%;background:' + col(v) + '"></i></div><b>' + v + '</b><div class="note">' + e(cut((A.scoreNotes || {})[n[0]], 90)) + '</div></div>'; }).join('')
       + '</div></div>'
       + '<h2>الخلاصة</h2><div class="sum"><b>' + e(A.verdict) + '</b>' + e(cut(A.summary, 330)) + '</div>'
@@ -371,7 +368,7 @@ tpl = sub1(
     const f = document.createElement('iframe');
     f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
     document.body.appendChild(f);
-    f.onload = () => setTimeout(() => { try { f.contentWindow.focus(); f.contentWindow.print(); } catch (x) {} setTimeout(() => f.remove(), 60000); }, 400);
+    f.onload = () => { const go = () => setTimeout(() => { try { f.contentWindow.focus(); f.contentWindow.print(); } catch (x) {} setTimeout(() => f.remove(), 60000); }, 300); try { f.contentWindow.document.fonts.ready.then(go); } catch (x) { go(); } };
     f.srcdoc = doc;
   }""",
     tpl,
@@ -402,12 +399,17 @@ tpl = sub1("  renderVals() {\n", """  renderVals() {
     });
     const sv = k => (typeof SC[k] === 'number' ? SC[k] : 0);
     const readLabel = S.analysisState === 'error' ? ('تعذّر التحليل: ' + S.errMsg) : S.analysisState === 'done' ? '✓ اكتمل التحليل' : S.analysisState === 'running' ? 'نقرأ الواجهة…' : 'ارفع صورة لنبدأ';
-    const readBg = S.analysisState === 'done' ? 'linear-gradient(160deg,#3FBF74,#1E8C52)' : S.analysisState === 'error' ? 'rgba(192,80,77,0.85)' : 'rgba(74,36,54,0.5)';
+    const readBg = S.analysisState === 'done' ? 'linear-gradient(160deg,#E4759D,#BE4A73)' : S.analysisState === 'error' ? 'rgba(192,80,77,0.85)' : 'rgba(74,36,54,0.5)';
     const afterLabel = S.afterState === 'loading' ? 'جارٍ توليد التصور من صورتك… قد يستغرق دقيقة' : S.afterState === 'error' ? ('تعذّر التوليد: ' + S.errMsg + ' — اضغط للإعادة') : S.afterState === 'idle' ? 'يُولَّد التصور بعد اكتمال التحليل' : '';
 """, tpl)
 
 tpl = sub1("    return {\n      showAnnotations:", """    return {
       stages, detChips, readLabel, readBg, afterLabel,
+      afterSrc: S.afterSrc || '', afterImgDisplay: S.afterSrc ? 'block' : 'none',
+      navStartDisplay: S.view === 'journey' ? 'none' : 'block',
+      prevDisplay: S.step > -1 ? 'flex' : 'none',
+      nextDisplay: (S.step === 1 || S.step === 4) ? 'flex' : 'none',
+      nextLabel: S.step === 1 ? 'شاهد التوصيات' : 'اطبع التقرير',
       previewDisplay: S.photoPreview ? 'block' : 'none', hintDisplay: S.photoPreview ? 'none' : 'flex', photoPreview: S.photoPreview || '',
       doneDisplay: S.analysisState === 'done' ? 'flex' : 'none', verdict: A.verdict || '',
       afterLabelDisplay: afterLabel ? 'block' : 'none',
@@ -421,6 +423,18 @@ tpl = sub1("    return {\n      showAnnotations:", """    return {
       changeChips: ((A.changes && A.changes.length) ? A.changes : ['المدخل', 'النوافذ', 'المواد', 'التظليل', 'الألوان']).map(text => ({ text })),
       sendChat: () => this.sendChat(),
       showAnnotations:""", tpl)
+
+
+# ---- review round: nav, step bar, images
+tpl = rsub1(r'<div style-hover="transform:translateY\(-2px\);" style="width:42px; height:42px;.*?</span>\s*</div>\s*(?=<div sc-camel-on-click="\{\{ startJourney \}\}")', '', tpl)
+tpl = sub1('style="background:linear-gradient(160deg,#E4759D,#BE4A73); color:#FFFFFF; font-size:15.5px; font-weight:700; padding:11px 28px;', 'style="display:{{ navStartDisplay }}; background:linear-gradient(160deg,#E4759D,#BE4A73); color:#FFFFFF; font-size:15.5px; font-weight:700; padding:11px 28px;', tpl)
+tpl = sub1('style="display:flex; align-items:center; gap:8px; padding:11px 26px;', 'style="display:{{ prevDisplay }}; align-items:center; gap:8px; padding:11px 26px;', tpl)
+tpl = sub1('style="display:flex; align-items:center; gap:8px; padding:11px 30px; border-radius:999px; background:linear-gradient(160deg,#E4759D,#BE4A73); font-size:14.5px;', 'style="display:{{ nextDisplay }}; align-items:center; gap:8px; padding:11px 30px; border-radius:999px; background:linear-gradient(160deg,#E4759D,#BE4A73); font-size:14.5px;', tpl)
+tpl = sub1('الخطوة التالية ›</div>', '{{ nextLabel }} ›</div>', tpl)
+tpl = sub1('<image-slot id="analysis-facade" shape="rect" placeholder="صورة الواجهة قيد التحليل"></image-slot>', '<img src="{{ photoPreview }}" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:rgba(74,36,54,0.35);">', tpl)
+tpl = sub1('<image-slot id="before-img" shape="rect" placeholder="الواجهة الأصلية — BEFORE"></image-slot>', '<img src="{{ photoPreview }}" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:rgba(74,36,54,0.35);">', tpl)
+tpl = sub1('<image-slot id="after-img" shape="rect" placeholder=" "></image-slot>', '<img src="{{ afterSrc }}" alt="" style="display:{{ afterImgDisplay }}; position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">', tpl)
+tpl = sub1('<image-slot id="chat-facade" shape="rect" placeholder="التصور المقترح"></image-slot>', '<img src="{{ afterSrc }}" alt="" style="display:{{ afterImgDisplay }}; position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">', tpl)
 
 # re-serialise exactly like the bundler does
 out = json.dumps(tpl, ensure_ascii=False).replace("</", "<\\u002F")

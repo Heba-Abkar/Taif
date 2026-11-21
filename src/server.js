@@ -113,6 +113,7 @@ app.post("/api/analyze-image", needKey, upload.single("image"), wrap(async (req,
     system: SYSTEM_PROMPT,
     maxTokens: 3200,
     json: true,
+    deterministic: true,
     messages: [{
       role: "user",
       content: [
@@ -123,7 +124,9 @@ app.post("/api/analyze-image", needKey, upload.single("image"), wrap(async (req,
 STEP 1 - inventory what is really visible (be careful, do not guess): floors, windows (shape, position), main entrance, VEHICLE GATE / garage opening (a gate for cars is a gate, NOT a wall), PEDESTRIAN gate, boundary wall, roof/parapet, materials, colours, shading devices.
 GUARD ROOM (غرفة الحارس): look carefully at the ground level beside the gates and along the boundary wall for a small enclosed room or booth with its own small door and/or small window or hatch. That is a GUARD ROOM, a real room used by the guard: it is NOT a window of the house, NOT a niche and NOT a decoration. If present, list it in "gates" with type "guard room" and describe it precisely (side, size, its door/window), and never count its small opening as a window of the main facade in the scores or recommendations.
 STEP 2 - score each area 0-100 with this rubric: composition = central entrance, symmetry, aligned vertical bays, base-middle-top articulation, flat roofline; colors = white/off-white or natural tones, accents under 20%, no saturated/reflective finishes; materials = render/stucco/stone/timber, no fake or reflective materials, no big glass walls; openings = arched or recessed, upright proportion between 1:2 and 1:3, evenly spaced; shading = operable shutters, cornices and shadow gaps, pergolas/screens.
-STEP 3 - recommendations must be SPECIFIC TO THIS PHOTO and different from any other building: say exactly WHERE on this facade (floor, side, which element), exactly WHAT to change, and the REAL reason (visual character AND practical benefit such as sun, privacy, depth, rain, maintenance, or the specific guideline rule). Never use "to comply with the standards" as the reason. Granite and timber are only traditional references: do not demand them; keep what the building already has when it is acceptable.
+STEP 3 - recommendations must be SPECIFIC TO THIS PHOTO: say exactly WHERE on this facade (floor, side, which element), exactly WHAT to change, and the PRACTICAL reason in one or two plain sentences: what physically happens (sun and heat, glare, privacy, rain and dust, light inside, cost/maintenance, how the material behaves: heat absorption, cooling, weathering, cleaning). Example of a good reason: "القوس يوزّع حمل الجدار فوق الفتحة ويترك ظلاً على الزجاج فيقلّ دخول الشمس المباشرة". BANNED as a reason (never write these or similar): "يعكس طابع الطائف", "يعزز الجاذبية البصرية", "يتماشى مع الهوية", "يبرز الطابع", "يحسّن العمق البصري" alone, "to comply with the standards". Mentioning the guideline is allowed only AFTER a practical reason. Each of the five reasons must be different. Granite and timber are only traditional references: do not demand them; keep what the building already has when it is acceptable.
+SCORES MUST BE STABLE: judge strictly by the rubric, use multiples of 5 only, and do not drift between runs.
+STEP 3b - COUNT precisely what is visible and fill "counts": number of windows, doors (house entrance doors), vehicle gates, pedestrian gates, guard rooms. List every opening in "openings" with its type (window | door | gate | garage door | guard room window), its floor/side, and relative size (small | medium | large | tall) so the editor can keep each one the same type, same place and same size.
 STEP 4 - "preserve" lists, in English, every gate, door, garage opening, guard room, boundary wall and other fixed element that the image editor must keep exactly as is and in the same place.
 
 Respond with ONLY valid JSON (Arabic text unless marked English):
@@ -134,6 +137,8 @@ Respond with ONLY valid JSON (Arabic text unless marked English):
  "scores": {"composition":0,"colors":0,"materials":0,"openings":0,"shading":0},
  "scoreNotes": {"composition":"max 12 words citing what you see","colors":"...","materials":"...","openings":"...","shading":"..."},
  "detected": {"windows":true,"entrance":true,"materials":true,"colors":true,"shading":true},
+ "counts": {"windows":0,"doors":0,"vehicleGates":0,"pedestrianGates":0,"guardRooms":0},
+ "openings": [{"type":"window | door | gate | garage door | guard room window","where":"floor + side","size":"small | medium | large | tall"}],
  "gates": [{"type":"vehicle gate | pedestrian gate | guard room | boundary wall | garage door","where":"short location"}],
  "strengths": ["short concrete strengths"],
  "recommendations": [
@@ -150,7 +155,7 @@ If the image is not a building, set all scores to 0 and say so in summary.` },
   });
   let a;
   try { a = JSON.parse(raw); } catch { return res.status(502).json({ error: "model returned invalid JSON", raw }); }
-  a.scores = Object.fromEntries(KEYS.map((k) => [k, Math.max(0, Math.min(100, Math.round(Number(a.scores?.[k]) || 0)))]));
+  a.scores = Object.fromEntries(KEYS.map((k) => [k, Math.max(0, Math.min(100, Math.round((Number(a.scores?.[k]) || 0) / 5) * 5))]));
   a.matchScore = Math.round(KEYS.reduce((t, k) => t + a.scores[k], 0) / KEYS.length);
   const byId = Object.fromEntries((Array.isArray(a.recommendations) ? a.recommendations : []).map((r) => [r.id, r]));
   a.recommendations = RECS.map((id) => ({ id, element: "", where: "", change: "", why: "", gain: 0, ...(byId[id] || {}) }));
@@ -173,6 +178,7 @@ app.post("/api/generate-image", needKey, upload.single("image"), wrap(async (req
 `Edit this photo of a real residential building into a refined contemporary version that follows the Taif Highlands contemporary style.
 This must still look like THE SAME house on the same street: keep the camera angle, framing, massing, number of floors, roof shape, surroundings, sky, lighting and overall colour tone.
 KEEP EXACTLY AS THEY ARE (same position, same function, do not turn them into windows or walls): ${preserve}. A vehicle gate stays a vehicle gate, a pedestrian gate stays a gate, and the guard room (غرفة الحارس, a small room beside the gate with its own door and/or small window) stays exactly a guard room of the same size and position: never turn it into a window, niche or wall, and do not restyle it as part of the main facade.
+OPENINGS ARE FIXED: the new image must have EXACTLY the same number of windows (${a.counts?.windows ?? "same as the photo"}), doors (${a.counts?.doors ?? "same as the photo"}), vehicle gates (${a.counts?.vehicleGates ?? "same as the photo"}), pedestrian gates (${a.counts?.pedestrianGates ?? "same as the photo"}) and guard rooms (${a.counts?.guardRooms ?? "same as the photo"}), each in the same position and with the same width and height. A window stays a window, a door stays a door, a gate stays a gate: never add, remove, merge, enlarge, shrink or convert any of them. ${Array.isArray(a.openings) && a.openings.length ? "Openings in the photo: " + a.openings.map((o) => `${o.type} (${o.where}, ${o.size})`).join("; ") + "." : ""} You may only restyle the frame, surround, arch shape inside the SAME opening size, shutters or shading around an opening.
 Make only restrained, believable changes: ${a.redesign || CONTEMPORARY_DIGEST}.
 Style target: ${CONTEMPORARY_DIGEST}.
 Do NOT make it look like a palace or mansion: no columns, domes, heavy ornament or stone cladding unless already present. Materials and colours stay close to what the house already has, using off-white render with modest timber accents.
