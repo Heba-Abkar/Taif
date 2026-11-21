@@ -425,5 +425,6 @@ tpl = sub1("    return {\n      showAnnotations:", """    return {
 # re-serialise exactly like the bundler does
 out = json.dumps(tpl, ensure_ascii=False).replace("</", "<\\u002F")
 html = html[: m.start(2)] + out + html[m.end(2):]
+html = html.replace("<head>", '<head><link rel="icon" href="/brand/mirat-icon.png">', 1)
 open(dst, "w", encoding="utf8").write(html)
 print("ok", len(html))
