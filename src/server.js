@@ -196,4 +196,13 @@ Photorealistic. No text, logos or watermarks.`;
 }));
 
 app.use((_req, res) => res.status(404).json({ error: "not found" }));
+// Pre-computed analyses of the gallery photos (data/seed): same photo -> same result, no OpenAI cost.
+try {
+  const seed = JSON.parse(fs.readFileSync(path.join(ROOT, "data", "seed", "gallery-analysis.json"), "utf8"));
+  for (const [file, analysis] of Object.entries(seed)) {
+    const buf = (() => { try { return fs.readFileSync(path.join(ROOT, "public", "gallery", file)); } catch { return null; } })();
+    if (buf && !readCache(`${hashOf(buf)}.analysis.json`)) writeCache(`${hashOf(buf)}.analysis.json`, JSON.stringify(analysis));
+  }
+} catch {}
+
 app.listen(PORT, () => console.log(`Taif backend on :${PORT}`));
