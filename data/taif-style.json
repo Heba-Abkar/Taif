@@ -1,0 +1,57 @@
+{
+  "source": {
+    "title": "Taif Highlands Architecture",
+    "url": "https://architsaudi.dasc.gov.sa/ar/taif-highlands-architecture",
+    "lastUpdated": "2025-12-21"
+  },
+  "overview": {
+    "ar": "تقع الطائف على هضبة في جبال الحجاز، وهي من أقدم مدن الجزيرة العربية ويعود تاريخها إلى ما قبل الإسلام. مناخها معتدل معظم العام وأمطارها أكثر من غيرها، وحدود طبيعية من الجبال والمنحدرات تحيط بأحياء متمايزة ومترابطة.",
+    "en": "Taif sits on a plateau in the Hijaz mountains and is one of the oldest cities of the Arabian Peninsula, with pre-Islamic origins. It has a temperate climate for most of the year and higher rainfall, and natural boundaries of mountains and slopes frame distinct, interconnected neighborhoods."
+  },
+  "elements": [
+    {
+      "id": "materials",
+      "ar": "مواد البناء",
+      "en": "Materials",
+      "details_ar": "البازلت والجرانيت والخشب، وهي مواد محلية.",
+      "details_en": "Basalt, granite and wood, all local materials."
+    },
+    {
+      "id": "massing",
+      "ar": "الكتلة والتكوين",
+      "en": "Massing and layout",
+      "details_ar": "كتل ضخمة ومتماثلة حول محور مركزي في البيوت والقصور التقليدية.",
+      "details_en": "Massive proportions arranged with central symmetry in traditional houses and palaces."
+    },
+    {
+      "id": "openings",
+      "ar": "الفتحات والنوافذ",
+      "en": "Openings and windows",
+      "details_ar": "فتحات مقوّسة بتفاصيل زخرفية.",
+      "details_en": "Arched openings with decorative details."
+    },
+    {
+      "id": "entrances",
+      "ar": "المداخل",
+      "en": "Entrances",
+      "details_ar": "مداخل غائرة بارتداد مزدوج.",
+      "details_en": "Entrances set back in a double recess."
+    },
+    {
+      "id": "facades",
+      "ar": "الواجهات",
+      "en": "Facades",
+      "details_ar": "لوحات ألوان محددة، وعناصر زخرفية، وأفاريز.",
+      "details_en": "Specific color palettes, decorative elements and cornices."
+    }
+  ],
+  "documents": [
+    { "id": "guidelines-en", "title": "Architectural Design Guidelines (English)", "sizeMB": 22.39 },
+    { "id": "guidelines-ar", "title": "موجهات التصميم المعماري (عربي)", "sizeMB": 20.01 },
+    { "id": "villas-en", "title": "Residential Villas Handbook (English)", "sizeMB": 12.64 },
+    { "id": "villas-ar", "title": "الدليل التطبيقي للفلل السكنية (عربي)", "sizeMB": 8.91 },
+    { "id": "lowrise-en", "title": "Low-rise Buildings Handbook (English)", "sizeMB": 10.4 },
+    { "id": "lowrise-ar", "title": "الدليل التطبيقي للمباني منخفضة الارتفاع (عربي)", "sizeMB": 21.08 },
+    { "id": "pattern-map", "title": "Architectural Pattern Distribution Maps (Taif Plan Regulating)", "sizeMB": 2.98 }
+  ]
+}

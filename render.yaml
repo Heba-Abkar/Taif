@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: taif-architecture-mirror
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false        # you paste it in the Render dashboard, never in git
+      - key: CHAT_MODEL
+        value: gpt-4o
+      - key: AI_LIMIT_PER_HOUR
+        value: "8"

@@ -1,0 +1,67 @@
+OFFICIAL SOURCES (Saudi Architectural Character program, Taif Highlands, v1.0):
+- Taif Highlands Architectural Design Guidelines (ADG)
+- Application Handbook: Residential Villas (Jan 2025)
+- Application Handbook: Low-rise Buildings (Jan 2025)
+
+STYLES: every handbook offers three styles: Traditional, Transitional, Contemporary. This site applies the CONTEMPORARY style by default: keep the essence of Taif character through skillful interpretation and abstraction of traditional forms in contemporary expression. Never copy historical examples directly.
+
+KEY FEATURES OF TAIF HIGHLANDS CHARACTER (ADG ch.1)
+1 Flat parapets with elliptical or circular openings. 2 Rounded corners and corner chamfers. 3 Buildings traditionally rendered white or off-white. 4 Arch-top windows and recesses. 5 Timber windows, shutters and decorative panels. 6 Projecting window surrounds, cornices and bands. 7 Decorated, double-recessed main entrances. 8 Symmetrical building forms. 9 Formal compositions on front facades.
+
+COMPOSITION (ADG ch.2)
+- Symmetry: centralized entrance on the primary facade; facade symmetry around a taller central volume. Smaller background buildings may use modest asymmetry.
+- Solid facades with regular, formal openings; wall piers aligned between floors; thicker walls at lower floors.
+- Vertical bays: align openings on different floors; hierarchy of bays creates symmetry.
+- Horizontal articulation: clear base, middle and top (tripartite) via cornices, change of opening style, wall thickness or surface detail.
+- Base details: thicker walls/knee wall or footing at ground floor; robust materials facing the street; finer detailing on ground-floor openings; accentuated primary entrance (porticos, arches, recesses).
+- Arched openings: high proportion of arched tops on openings and recesses; ornament such as protruding surrounds or carved timber panels.
+- Roofscape: symmetrical silhouette; flat roofs required; parapets may have rectangular recesses with circular/elliptical openings aligned with vertical bays; rooftop terraces set back from the facade.
+- Multi-aspect buildings: primary and secondary facades unified in detailing.
+
+ELEMENTS (ADG table)
+- Opening proportion: vertically rectangular, width:height between 1:2 and 1:3.
+- Window-to-wall: traditional examples have low void proportion (20-30%); the ADG also states openings should take up 40-60% of the overall facade. Treat 20-60% as the acceptable band and flag extremes (very large glazing or almost none).
+- Shutters: solid timber panels with contemporary interpretation of traditional patterns; operable, giving shading and privacy.
+- Corners: generally square; chamfered/rounded corners permitted where a building has two primary facades (villa handbook traditional/transitional favour rounded corners).
+- Rooftop mechanical equipment set back at least 4 m from the edge of primary and secondary frontage and screened behind a parapet.
+- No externally mounted rolling shutters; recessed or housed shutters preferred.
+
+CONTEMPORARY VILLA RULES (Residential Villas handbook, contemporary style)
+- Primary entrance central to the facade, aligned with a vertical central element; door set in a recessed surround, timber, simply detailed, inspired by Taif style.
+- Solid form with regular formal openings made of deep recessed arched-frame openings.
+- Windows: abstracted from traditional, simple recesses in the facade and slender frames with screens inspired by traditional window screens; evenly spaced and related to the interior layout.
+- Clear vertical articulation by repeating vertical elements and symmetrical bays; horizontally aligned openings plus horizontal recesses, simple cornicing, continuous projecting or recessed bands reinforce base-middle-top.
+- Base emphasized by a large central entrance with flanking elements.
+- Parapets: simple sharp forms, sometimes with cornice banding or projecting elements on primary frontages; secondary roofs may continue the facade with crisp capping.
+- Accessible roofs: high parapet walls for privacy; pergolas at roof level for shading and privacy; secondary roof facades may have covered walkways with repeated arched columns.
+- Cornicing, capping and shadow gaps emphasize horizontality.
+- Boundary walls, gates and portals complement the villa; gates folding or hinged/side-rolling, using abstracted traditional patterns; consistent treatment between adjacent plots.
+- Contemporary materials allowed for walls, windows, doors, shutters; reflective or luminescent finishes are not appropriate.
+
+CONTEMPORARY LOW-RISE RULES (Low-rise handbook, contemporary style)
+- Same composition logic; mixed-use buildings symmetrical with a centralized ground-floor entrance; shop entrances glazed with simple timber frame and screen; secondary entrances set back.
+- Deep recessed arched-frame openings; round arches on front-facade windows (shop windows without arches).
+- Horizontal cornice bands at window-sill level; base emphasized by taller floor-to-ceiling height and more glazing.
+- Parapets simple sharp forms with cornice banding at the bottom.
+
+COLORS AND MATERIALS (ADG ch.4, handbooks ch.4)
+- Primary wall color: white or off-white for special buildings; natural colors of local materials and landscape for ordinary buildings.
+- Approximate primary-color share of the facade: Traditional >90%, Transitional >85%, Contemporary >80%. Accent colors max: Traditional <10%, Transitional <15%, Contemporary <20% of facade area.
+- Accents go on openings, wooden elements, doors, shutters (different color, carving, metal details, decorative stucco).
+- RAL palette: 9001, 9016, 9010, 9002, 1015, 1014, 1035, 1024, 1001, 1011, 6028, 6010, 6033, 5025, 7038, 7013, 7047, 8012.
+- Local materials: basalt stone, granite, timber; smooth/rough-cast white render, stucco, GRC detailing, stained timber, honed stone, metal panels as substitutes.
+- Avoid reflective, luminescent or mirrored finishes; avoid highly saturated artificial colors on large areas; avoid large expanses of glass (cooling demand, glare), fake stone/marble, materials that weather poorly.
+
+PATTERNS (ADG ch.5)
+- Geometric and abstracted floral patterns (Taif as "Orchard of Makkah"); avoid calligraphic patterns on non-religious buildings.
+- Focus patterns on doors, window screens, shutters, balcony and terrace screens; keep patterns consistent across the facade; linear horizontal patterns painted or recessed in plaster are encouraged.
+
+APPLYING THE CHARACTER (ADG ch.6)
+- Interpret, do not copy; respect proportion, size and construction logic of original elements; do not scale small elements into oversized graphic features.
+- Functionality: elements must perform (shutters operable, recesses functional); no fake materials; no wallpaper-like superficial application.
+- Avoid large space frames, spider-joint glazing and large curtain-wall areas.
+- Highest fidelity at ground floor and elements near the public realm.
+
+DOS AND DON'TS (Villas handbook ch.7)
+- Don't use large or mirrored glazing, razor/barbed wire, exposed air-conditioning units, water tanks or satellite dishes visible from the street, surface-mounted un-housed rolling shutters, corrugated-metal wall extensions, fake shutters, fake stone or marble.
+- Do integrate screens and security, screen services, use side-rolling/swinging/folding gates, use colors compatible with the Taif palette and locally sourced materials.
