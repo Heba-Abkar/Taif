@@ -109,7 +109,7 @@ app.post("/api/analyze-image", needKey, upload.single("image"), wrap(async (req,
   if (cached) return res.json({ ...JSON.parse(cached), cached: true });
 
   const dataUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
-  const raw = await complete({
+  const runAnalysis = (extra = "") => complete({
     system: SYSTEM_PROMPT,
     maxTokens: 3200,
     json: true,
@@ -149,10 +149,17 @@ Respond with ONLY valid JSON (Arabic text unless marked English):
  "preserve": ["English list of fixed elements to keep"],
  "redesign": "English: precise, restrained edits for this exact facade (what to change where), keeping everything in preserve unchanged"
 }
-If the image is not a building, set all scores to 0 and say so in summary.` },
+If the image is not a building, set all scores to 0 and say so in summary.
+LANGUAGE RULE: every text field except "preserve", "redesign" and the "type"/"size" values of "openings"/"gates" MUST be written in Arabic. Do not answer in English.${extra}` },
       ],
     }],
   });
+  const isArabic = (t) => /[\u0600-\u06FF]/.test(String(t || ""));
+  let raw = await runAnalysis();
+  try {
+    const t = JSON.parse(raw);
+    if (!isArabic(t.summary) || !isArabic(t.verdict) || !isArabic(t.recommendations?.[0]?.why)) raw = await runAnalysis("\nYour previous answer was not in Arabic. Write summary, verdict, scoreNotes, strengths and every recommendation field in Arabic.");
+  } catch {}
   let a;
   try { a = JSON.parse(raw); } catch { return res.status(502).json({ error: "model returned invalid JSON", raw }); }
   a.scores = Object.fromEntries(KEYS.map((k) => [k, Math.max(0, Math.min(100, Math.round((Number(a.scores?.[k]) || 0) / 5) * 5))]));
