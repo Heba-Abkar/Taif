@@ -328,7 +328,7 @@ tpl = sub1(
     if (!A) { alert('أكمل التحليل أولاً ثم اطبع التقرير.'); return; }
     const e = t => this.esc(t);
     const O = location.origin;
-    const logo = await this.toDataUrl('/brand/mirat-icon.png').catch(() => '');
+    const logo = await this.toDataUrl('/brand/logo.png').catch(() => '');
         const before = this._photoUrl ? await this.toDataUrl(this._photoUrl).catch(() => this._photoUrl) : '';
     const names = [['composition', 'التكوين المعماري'], ['colors', 'الألوان'], ['materials', 'المواد والخامات'], ['openings', 'الفتحات'], ['shading', 'التظليل']];
     const recs = (A.recommendations || []).filter(r => r.where);
@@ -340,8 +340,8 @@ tpl = sub1(
     const doc = '<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>تقرير مرآة عمارة الطائف</title><style>'
       + '@font-face{font-family:Cairo;font-weight:400;src:url(' + O + '/fonts/cairo-400.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}@font-face{font-family:Cairo;font-weight:600;src:url(' + O + '/fonts/cairo-600.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}@font-face{font-family:Cairo;font-weight:700;src:url(' + O + '/fonts/cairo-700.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}@font-face{font-family:Cairo;font-weight:800;src:url(' + O + '/fonts/cairo-800.woff2);unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}@font-face{font-family:Cairo;font-weight:400;src:url(' + O + '/fonts/cairo-latin-400.woff2);unicode-range:U+0000-05FF,U+2000-206F}@font-face{font-family:Cairo;font-weight:600 800;src:url(' + O + '/fonts/cairo-latin-700.woff2);unicode-range:U+0000-05FF,U+2000-206F}@page{size:A4;margin:9mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}'
       + 'body{margin:0;font-family:Cairo,Tahoma,sans-serif;color:#2b1a24;font-size:12px;line-height:1.65}'
-      + '#page{width:100%}.head{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(160deg,#B26984,#6B3550);border-radius:12px;padding:9px 16px;color:#fff;gap:12px}'
-      + '.head .m{height:38px;width:38px;border-radius:9px;background:#000}.head .c{height:34px}.head .t{flex:1;text-align:right;margin-right:4px}.head b{font-size:16px}.head span{font-size:11px;opacity:.85}'
+      + '#page{width:100%}.head{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(160deg,#B26984,#6B3550);border-radius:12px;padding:6px 18px;color:#fff;gap:14px}'
+      + '.head .m{height:52px;width:auto;display:block}.head .c{height:34px}.head .t{flex:1;text-align:right;margin-right:4px}.head b{font-size:16px}.head span{font-size:11px;opacity:.85}'
       + '.imgs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.imgs figure{margin:0;position:relative;height:200px;border-radius:10px;overflow:hidden;background:#f1e6ec}'
       + '.imgs img{width:100%;height:100%;object-fit:contain;display:block}.tag{position:absolute;top:7px;right:7px;background:rgba(90,42,68,.85);color:#fff;border-radius:99px;padding:2px 11px;font-size:11px;font-weight:700}'
       + '.tag.a{background:#BE4A73}.grid{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;border:1px solid #ecd3df;border-radius:12px;padding:8px 12px}'
